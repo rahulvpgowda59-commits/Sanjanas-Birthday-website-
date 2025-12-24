@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Happy 19th Birthday Sanjana 🎄</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+
+<style>
+.heart:active {
+  transform: scale(1.3);
+}
+
+/* Snowflakes */
+.snowflake {
+  position: fixed;
+  top: -10px;
+  color: white;
+  user-select: none;
+  pointer-events: none;
+  animation: snowfall linear infinite;
+  opacity: 0.8;
+}
+
+/* Floating Hearts */
+.heart {
+  position: fixed;
+  bottom: -20px;
+  font-size: 22px;
+  cursor: pointer;
+  animation: floatUp 7s linear infinite;
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+/* Sparkles */
+.sparkle {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: #ff69b4;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatUp 0.7s ease-out forwards;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: url("background.jpg") center/cover no-repeat fixed;
+  overflow: hidden;
+}
+
+.overlay {
+  background: rgba(255, 194, 194, 0);
+  min-height: 100vh;
+  padding: 40px 20px;
+  position: relative;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+nav button {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 30px;
+  background: #ffb6c1;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+/* Button hover animation */
+nav button:hover {
+  transform: scale(1.1);
+  background: #ff80ab;
+  box-shadow: 0 0 10px #ff0672c1;
+}
+
+/* Active (current) tab button animation */
+nav button.active-tab {
+  box-shadow: 0 0 15px #ff0672c1, 0 0 30px #ff0672c1;
+  animation: glow 2s infinite;
+}
+
+.section {
+  display: none;
+  max-width: 850px;
+  margin: auto;
+  text-align: center;
+  animation: fade 1s ease;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 32px 36px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 128, 192, 0.517),
+    rgba(255, 182, 193, 0.88)
+  );
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(255, 85, 170, 0.8),
+    0 0 45px rgba(123, 62, 101, 0.35);
+}
+
+.section.active {
+  display: block;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 22px;
+}
+
+p,
+pre {
+  line-height: 2.1;
+  font-size: 1.35rem;
+  margin-bottom: 22px;
+}
+
+.cursor {
+  display: inline-block;
+  margin-left: 4px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#homePlayBtn,
+#playBtn {
+  margin-top: 25px;
+  padding: 14px 36px;
+  border: none;
+  border-radius: 30px;
+  background: #ff0672c1;
+  color: rgb(96, 7, 81);
+  cursor: pointer;
+  animation: glow 2s infinite;
+}
+
+@keyframes glow {
+  50% {
+    box-shadow: 0 0 20px #dc0021;
+  }
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
+}
+
+@keyframes snowfall {
+  to {
+    transform: translateY(110vh);
+  }
+}
+
+/* Text glow animation for Now Playing text */
+@keyframes textGlow {
+  0%, 100% {
+    text-shadow: 0 0 6px #ff0672c1, 0 0 10px #ff0672c1, 0 0 20px #ff0672c1;
+  }
+  50% {
+    text-shadow: 0 0 12px #ff6ea1c1, 0 0 22px #ff6ea1c1, 0 0 30px #ff6ea1c1;
+  }
+}
+
+/* Now playing message style */
+#nowPlayingMsg {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #600751;
+  font-weight: 600;
+}
+</style>
+</head>
+
+<body>
+<!-- Audio -->
+<audio id="bgMusic" loop src="background.mp3"></audio>
+<audio id="music" src="music.mp3"></audio>
+<audio id="typingSound" src="type.mp3"></audio>
+
+<!-- Get Started Overlay -->
+<div id="getStartedOverlay" style="
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 194, 194, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-size: 1.4rem;
+  text-align: center;
+  padding: 20px;
+  color: #600751;
+">
+  <pre>“Pause for a moment.
+This is just for you.
+Tap below when you’re ready.”
+</pre>
+  <button id="getStartedBtn" style="
+    margin-top: 20px;
+    padding: 14px 36px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 30px;
+    background: #ff0672c1;
+    color: rgb(96, 7, 81);
+    cursor: pointer;
+    animation: glow 2s infinite;
+  ">
+    Get Started
+  </button>
+</div>
+
+<!-- 🌟 Secret Message -->
+<div id="easterEgg" style="
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 182, 193, 0.95);
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+  color: #600751;
+  font-size: 1.6rem;
+  animation: fade 1s ease;
+">
+  <div style="
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 600px;
+    box-shadow: 0 0 30px rgba(255, 0, 120, 0.4);
+    text-align: center;
+  ">
+    <h2 style="margin-bottom: 15px; font-size: 2rem;">🌟 Secret Unlocked</h2>
+    <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px;">
+      Sanjana,<br><br>
+      Some moments don’t make a sound.<br>
+      They stay hidden, waiting.<br>
+      If you found this,<br>
+      maybe it’s because you know how to be still<br>
+      in a world that never stops moving.<br>
+      That’s rare.<br>
+      And maybe that’s why<br>
+      the gentle things<br>
+      always find their way to you.
+    </p>
+    <button onclick="closeEasterEgg()" style="
+      margin-top: 20px;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      background: #ff0672c1;
+      color: #600751;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    ">
+      Close
+    </button>
+  </div>
+</div>
+
+<div class="overlay" style="display:none;" id="mainContent">
+  <nav>
+    <button onclick="showSection('home')">Home 🎉</button>
+    <button onclick="showSection('memories')">Memories 💭</button>
+    <button onclick="showSection('nineteen')">19 Wishes 💫</button>
+    <button onclick="showSection('special')">Why You 💖</button>
+    <button onclick="showSection('letter')">Letter 💌</button>
+    <button onclick="showSection('dreams')">Dreams 🌙</button>
+    <button onclick="showSection('christmas')">Christmas 🎄</button>
+    <button onclick="showSection('musicTab')">Music 🎶</button>
+    <button onclick="showSection('surprise')">One Last Thing 🎁</button>
+  </nav>
+
+  <div id="home" class="section">
+    <h1>Happy 19th Birthday, Sanjana 🎂</h1>
+    <pre class="typewriter" data-text="Today isn’t just about candles or wishes.
+It’s about celebrating you — the person you are
+and the quiet kindness you carry every day.
+
+Slow down, breathe, Smile a little,
+Feel a little, and explore 
+this little world made just for you."></pre>
+  </div>
+
+  <div id="memories" class="section">
+    <h1>Memories 💭</h1>
+    <pre class="typewriter" data-text="Some memories don’t need pictures,
+they live quietly in the heart.
+
+Little moments — random laughs,
+silly conversations, comfortable silence.
+
+The kind of memories that don’t fade,
+even when time moves fast.
+
+Sanjana, these moments matter,
+because they were shared with you.
+
+And no matter how life changes,
+they’ll always stay warm, just like this feeling.
+
+And whenever I think of those moments,
+they remind me — some things are meant to stay."></pre>
+  </div>
+
+  <div id="nineteen" class="section">
+    <h1>19 Wishes 💫</h1>
+    <pre class="typewriter" data-text="Nineteen wishes, one for each year,  
+To fill your days with joy and cheer.  
+
+Wish one: May laughter light your way,  
+Even on skies that seem gray.  
+
+Wish two: Courage to chase your dreams,  
+Flowing strong like mountain streams.  
+
+Wish three: A heart that’s kind and true,  
+In everything you say and do.  
+
+Wish four: Moments of quiet peace,  
+Where all your worries find release.  
+
+Wish five: Friends who lift you high,  
+And never let your spirits die.  
+
+Wish six: Strength to rise when you fall,  
+And hope to answer every call.  
+
+Wish seven: Adventures, big and small,  
+That teach you how to stand tall.  
+
+Wish eight: A smile that warms the cold,  
+A story beautifully told.  
+
+Wish nine: Dreams that stretch and soar,  
+Opening each new door.  
+
+Wish ten: Days wrapped in love and light,  
+That turn the dark to bright.  
+
+Wish eleven: Wisdom soft and deep,  
+To guide your soul’s own leap.  
+
+Wish twelve: Patience when things slow,  
+And grace in how you grow.  
+
+Wish thirteen: Joy in simple things,  
+Like birds that fly on gentle wings.  
+
+Wish fourteen: Peace within your mind,  
+And happiness you’ll find.  
+
+Wish fifteen: A heart that’s brave and free,  
+To be the best you’ll ever be.  
+
+Wish sixteen: Moments that make you pause,  
+To see life’s gentle cause.  
+
+Wish seventeen: That you’ll always know,  
+How loved you are, and how you glow. 
+
+Wish eighteen: May purpose guide each choice you make,
+And light the paths you dare to take.
+
+Wish nineteen: May life unfold with grace and cheer,
+Your brightest chapter starting here."></pre>
+  </div>
+
+  <div id="special" class="section">
+    <h1>Why You Are Special 💖</h1>
+    <pre class="typewriter" data-text="You have this rare gift — the way you make everyone 
+around you feel seen and valued without even trying.
+
+Your kindness isn’t loud or flashy; it’s quiet, steady, and real.
+
+You bring calm to chaos, warmth to cold days, and a smile
+when it’s needed most.
+
+It’s not just what you do, but who you are — a beautiful soul 
+that makes the world better simply by being in it.
+
+Sanjana, you are truly one of a kind, and I’m so lucky to have you as a friend."></pre>
+  </div>
+
+  <div id="letter" class="section">
+    <h1>A Letter 💌</h1>
+    <pre class="typewriter" data-text="Hey Sanjana!
+
+Happy 19th! This is your year to shine brighter than ever.
+
+Life’s full of wild adventures and endless possibilities — and you’re ready to grab them all!
+
+Believe in yourself, because you’ve got everything it takes to make your dreams come true.
+
+Laugh loud, chase hard, and never forget to dance through the ups and downs.
+
+I’m right here cheering for you, every step of the way —
+because someone as amazing as you deserves all the happiness in the world!
+
+Let’s make this year unforgettable!"></pre>
+  </div>
+
+  <div id="dreams" class="section">
+    <h1>Your Dreams 🌙</h1>
+    <pre class="typewriter" data-text="Dreams don’t always shout,
+sometimes they whisper.
+
+They sit quietly in your heart,
+waiting for the right moment.
+
+Some dreams will change,
+some will surprise you,
+and some will take time — and that’s okay.
+
+Sanjana, trust where you’re going.
+You don’t need to rush.
+
+Step by step, dream by dream,
+you’re becoming exactly who you’re meant to be."></pre>
+  </div>
+
+  <div id="christmas" class="section">
+    <h1>Christmas Magic 🎄</h1>
+    <pre class="typewriter" data-text="Being born on Christmas means
+you carry a little extra warmth.
+
+A kind of light that feels like home,
+soft, calm, and comforting.
+
+While the world glows with lights and wishes,
+you quietly become one of them.
+
+Sanjana, may this season wrap you
+in peace, hope, and gentle joy.
+
+And may every Christmas remind you —
+you are something truly special."></pre>
+  </div>
+
+  <div id="musicTab" class="section">
+    <h1>A Music For You 🎶</h1>
+    <pre class="typewriter" data-text="Sanjana,
+
+This music is for those moments when things feel a bit too much and you don’t really feel like explaining yourself. When you just want to sit quietly, breathe, and let the music do the talking. You don’t have to be strong all the time, and you don’t have to say anything to be understood.
+
+Let the music stay with you the way a good friend would—calm, patient, and easy. Even on days when your thoughts feel messy or your emotions feel heavier than usual, you don’t have to handle them all by yourself. If you ever feel like talking, or even if you just want someone to listen without giving advice, I’m here.
+
+No pressure. No expectations.
+Just care, and a little reminder that you’re not alone.
+
+Always here."></pre>
+    <button id="playBtn" onclick="playMusicWithFade()">Click to Play 🎧</button>
+    <div id="nowPlayingMsg"></div>
+  </div>
+
+  <div id="surprise" class="section">
+    <h1>One Last Thing 🎁</h1>
+    <pre class="typewriter" data-text="Before you go,
+I just want you to remember this.
+
+You don’t need to be perfect.
+You don’t need to have everything figured out.
+
+Just keep being you —
+kind, genuine, and quietly strong.
+
+The world needs that more than you know.
+
+No matter where life leads you,
+I’ll always be by your side,
+through every step and every moment.
+
+Happy 19th Birthday, Sanju.
+Stay exactly the way you are."></pre>
+  </div>
+</div>
+
+<script>
+const typingSound = document.getElementById("typingSound");
+const getStartedBtn = document.getElementById("getStartedBtn");
+const getStartedOverlay = document.getElementById("getStartedOverlay");
+const mainContent = document.getElementById("mainContent");
+
+// Start site after clicking "Get Started"
+getStartedBtn.addEventListener("click", () => {
+  getStartedOverlay.style.display = "none";
+  mainContent.style.display = "block";
+  showSection("home");
+  playBackgroundMusic();
+});
+
+// Show chosen section, type text
+function showSection(id) {
+  // Remove active class from all buttons
+  document.querySelectorAll("nav button").forEach(btn => {
+    btn.classList.remove("active-tab");
+  });
+
+  // Add active class to clicked button
+  const clickedButton = document.querySelector(`nav button[onclick="showSection('${id}')"]`);
+  if (clickedButton) {
+    clickedButton.classList.add("active-tab");
+  }
+
+  // Show the section
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  const sec = document.getElementById(id);
+  sec.classList.add("active");
+
+  // Start typing after 1.5 seconds delay
+  setTimeout(() => {
+    startTyping(id);
+  }, 1500);
+}
+
+// Type text for a given section, if already typing skip restarting
+function startTyping(sectionId) {
+  const sec = document.getElementById(sectionId);
+  if (!sec) return;
+  sec.querySelectorAll(".typewriter").forEach(el => {
+    const text = el.dataset.text;
+    typeWriter(el, text, 90);
+  });
+}
+
+function typeWriter(el, text, speed = 75) {
+  el.innerHTML = "";
+  let i = 0;
+  const cursor = document.createElement("span");
+  cursor.className = "cursor";
+  cursor.innerHTML = "|";
+  el.appendChild(cursor);
+
+  function type() {
+    if (i < text.length) {
+      el.insertBefore(document.createTextNode(text.charAt(i)), cursor);
+      typingSound.currentTime = 0;
+      typingSound.play();
+
+      const sectionParent = el.closest(".section");
+      if (sectionParent) sectionParent.scrollTop = sectionParent.scrollHeight;
+
+      i++;
+      setTimeout(type, speed);
+    } else {
+      cursor.remove();
+    }
+  }
+  type();
+}
+
+function playBackgroundMusic() {
+  const bg = document.getElementById("bgMusic");
+  bg.volume = 0;
+  bg.play().catch(e => console.error("Background music play error:", e));
+  let v = 0;
+  const f = setInterval(() => {
+    if (v < 0.25) {
+      v += 0.01;
+      bg.volume = v;
+    } else clearInterval(f);
+  }, 200);
+}
+
+function playMusicWithFade() {
+  const bg = document.getElementById("bgMusic");
+  const m = document.getElementById("music");
+  const playBtn = document.getElementById("playBtn");
+  const nowPlayingMsg = document.getElementById("nowPlayingMsg");
+
+  bg.pause();
+
+  m.volume = 0;
+  m.play().catch(e => console.error("Music play error:", e));
+  let v = 0;
+  const f = setInterval(() => {
+    if (v < 0.8) {
+      v += 0.02;
+      m.volume = v;
+    } else clearInterval(f);
+  }, 200);
+
+  playBtn.style.display = "none";
+
+  nowPlayingMsg.textContent = "Now playing: \"HELLO\" BGM 💖";
+  nowPlayingMsg.style.fontSize = "1.2rem";
+  nowPlayingMsg.style.color = "#600751";
+  nowPlayingMsg.style.fontWeight = "600";
+  nowPlayingMsg.style.animation = "textGlow 2s infinite alternate";
+}
+
+/* ❄️ Snowfall Effect */
+function createSnowflake() {
+  const snow = document.createElement("div");
+  snow.className = "snowflake";
+  snow.innerHTML = "❄";
+  snow.style.left = Math.random() * window.innerWidth + "px";
+  snow.style.fontSize = Math.random() * 10 + 10 + "px";
+  snow.style.animationDuration = Math.random() * 5 + 5 + "s";
+  snow.style.opacity = Math.random();
+  document.body.appendChild(snow);
+
+  setTimeout(() => snow.remove(), 10000);
+}
+
+setInterval(createSnowflake, 250);
+
+function burstSparkles(x, y) {
+  for (let i = 0; i < 14; i++) {
+    const s = document.createElement("div");
+    s.className = "sparkle";
+
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 45 + 15;
+
+    s.style.left = x + "px";
+    s.style.top = y + "px";
+    s.style.setProperty("--x", Math.cos(angle) * distance + "px");
+    s.style.setProperty("--y", Math.sin(angle) * distance + "px");
+
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 700);
+  }
+}
+
+/* 💖 HEARTS — FIRST POP SHOWS MESSAGE */
+let easterEggShown = false;
+
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "🎁";
+  heart.style.left = Math.random() * 100 + "vw";
+
+  heart.addEventListener("click", (e) => {
+    burstSparkles(e.clientX, e.clientY);
+    heart.remove();
+
+    if (!easterEggShown) {
+      easterEggShown = true;
+      document.getElementById("easterEgg").style.display = "flex";
+    }
+  });
+
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 7000);
+}, 900);
+
+function closeEasterEgg() {
+  document.getElementById("easterEgg").style.display = "none";
+}
+</script>
+
+<!-- Snow & Heart Containers -->
+<div id="snowContainer"></div>
+<div id="heartContainer"></div>
+</body>
+</html>
