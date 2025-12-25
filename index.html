@@ -274,19 +274,15 @@ Tap below when you’re ready.”
     box-shadow: 0 0 30px rgba(255, 0, 120, 0.4);
     text-align: center;
   ">
-    <h2 style="margin-bottom: 15px; font-size: 2rem;">🌟 Secret Unlocked</h2>
-    <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px;">
-      Sanjana,<br><br>
-      Some moments don’t make a sound.<br>
-      They stay hidden, waiting.<br>
-      If you found this,<br>
-      maybe it’s because you know how to be still<br>
-      in a world that never stops moving.<br>
-      That’s rare.<br>
-      And maybe that’s why<br>
-      the gentle things<br>
-      always find their way to you.
-    </p>
+    <h2 style="margin-bottom: 15px; font-size: 2rem;">Hidden Truths for the Brave Soul</h2>
+    <div id="easterEggText" style="
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      padding-right: 10px;
+    "><pre></pre></div>
     <button onclick="closeEasterEgg()" style="
       margin-top: 20px;
       padding: 12px 30px;
@@ -684,12 +680,58 @@ setInterval(() => {
     if (!easterEggShown) {
       easterEggShown = true;
       document.getElementById("easterEgg").style.display = "flex";
+      typeEasterEggText();
     }
   });
 
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 7000);
 }, 900);
+
+function typeEasterEggText() {
+  const text = `If you’ve found this note, then listen close,
+Here lies advice meant only for those
+Who dare to be themselves — loud, quiet, or bold,
+Their story’s worth more than gold.
+
+Dream big, but take your time,
+Life’s not a race — it’s a steady climb.
+
+Speak your truth, don’t fear to say,
+What’s on your heart, come what may.
+
+Mistakes? They’re just lessons in disguise,
+Helping you grow, become more wise.
+
+Kindness is strength, not just a word,
+It changes the world starting with you
+
+Choose friends who lift you when you fall,
+They’ll be your strength through it all.
+
+Take care of yourself — mind, body, and soul,
+You’re the captain steering your whole role.
+
+Laugh often, love deeply, dance in the rain,
+Even on tough days, there’s sunshine after pain.
+
+So keep shining bright, your light so true,
+The world’s a better place because of you.`;
+  const el = document.getElementById("easterEggText");
+  el.querySelector("pre").textContent = "";
+  const pre = el.querySelector("pre");
+  let i = 0;
+  function type() {
+    if (i < text.length) {
+      pre.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, 70);
+      // Auto-scroll to bottom
+      el.scrollTop = el.scrollHeight;
+    }
+  }
+  type();
+}
 
 function closeEasterEgg() {
   document.getElementById("easterEgg").style.display = "none";
